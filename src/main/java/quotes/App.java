@@ -57,6 +57,5 @@ public class App {
 
         //print
         System.out.println(randomQuote);
-        System.out.println(quotes.get(0).text);
     }
 }
