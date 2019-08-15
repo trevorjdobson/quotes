@@ -3,12 +3,59 @@
  */
 package quotes;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Random;
+
 public class App {
-    public String getGreeting() {
-        return "Hello world.";
+
+    public List<Quote> readFile() throws IOException {
+        //start gson
+        Gson gson = new Gson();
+        //path
+        String path = "src/main/resources/recentquotes.json";
+
+        //scanner reads file
+        String text = new String (Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
+
+        //creates an artifact for gson casting
+        TypeToken<List<Quote>> token = new TypeToken<>() {
+        };
+        //creates from text, list object
+        List<Quote> quotes = gson.fromJson(text, token.getType());
+
+        return quotes;
     }
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+    public String randomQuote (List<Quote> quotes){
+        //variables
+        int max = quotes.size();
+        int min = 0;
+        //random choice between max and min
+        Random r = new Random();
+        int choice = r.nextInt((max-min)+1)+min;
+        String output = quotes.get(choice).toString();
+        //return
+        return output;
+    }
+
+    public static void main(String[] args) throws IOException {
+        //create instance
+        App app = new App();
+        
+        //read file into data structure
+        List<Quote> quotes = app.readFile();
+
+        //call a random quote
+        String randomQuote = app.randomQuote(quotes);
+
+        //print
+        System.out.println(randomQuote);
     }
 }
