@@ -9,3 +9,4 @@ author when it is run. The app should choose one quote each time it is run.
 ## credits and contributions
 Joachen Busch
 https://stackoverflow.com/questions/27014417/how-to-use-gson-to-convert-json-to-arraylist-if-the-list-contain-different-class/27015959
+https://www.mkyong.com/java/java-generate-random-integers-in-a-range/
