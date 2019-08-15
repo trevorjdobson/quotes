@@ -3,12 +3,45 @@
  */
 package quotes;
 
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class AppTest {
-    @Test public void testAppHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
+    App app = new App();
+    List<Quote> quotes;
+    String randomQuote;
+
+    @Before
+    public void setUp() throws IOException {
+        quotes = app.readFile();
+        randomQuote = app.randomQuote(quotes);
+
+    }
+    @Test
+    public void readFile() {
+        assertTrue(quotes.size()>1);
+    }
+    @Test
+    public void readFile_CheckFirstAuthor() {
+        assertTrue(quotes.get(0).author.equals("Marilyn Monroe"));
+    }
+    @Test
+    public void readFile_CheckFirstLikes() {
+        assertTrue(quotes.get(0).likes.equals("18651 likes"));
+    }
+    @Test
+    public void readFile_CheckFirstText() {
+        String expected = " “I am good, but not an angel. I do sin, but I am not the devil. I am just a small girl in a big world trying to find someone to love.” ";
+        assertEquals(expected,quotes.get(0).text);
+    }
+
+    @Test
+    public void randomQuote() {
+        assertTrue(randomQuote.length()>1);
     }
 }
