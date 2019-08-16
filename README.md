@@ -1,8 +1,7 @@
-# Lab 08
-Use the file recentquotes.json to show random popular book quotes. 
-Your program should use GSON to parse the .json file. 
-The app needs no functionality other than showing the quote and the 
-author when it is run. The app should choose one quote each time it is run.
+# Lab 09 Continued From Lab 08
+Use an API to return a random quote and if the request fails,
+use the file recentquotes.json to show a random quote.
+
 
 ## how to use
 ```
@@ -15,11 +14,13 @@ It will show you a random text and author after run.
 ```
 
 ## Collaborators
-Jack Kinne
 Trevor Dobson
+Jack Kinne (Lab 08)
+
 
 
 ## credits and contributions
 Joachen Busch
 https://stackoverflow.com/questions/27014417/how-to-use-gson-to-convert-json-to-arraylist-if-the-list-contain-different-class/27015959
 https://www.mkyong.com/java/java-generate-random-integers-in-a-range/
+https://github.com/jamesseanwright/ron-swanson-quotes#ron-swanson-quotes-api

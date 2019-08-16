@@ -17,6 +17,13 @@ public class Quote {
         this.text = text;
     }
 
+    Quote (String text){
+
+        this.author = "Ron Swanson";
+
+        this.text = text;
+    }
+
     //methods
     public String toString(){
         return "text: "+ this.text + "\nauthor: " + this.author;
