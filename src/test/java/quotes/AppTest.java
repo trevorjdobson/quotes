@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class AppTest {
     App app = new App();
     List<Quote> quotes;
-    String randomQuote;
+    Quote randomQuote;
 
     @Before
     public void setUp() throws IOException {
@@ -42,6 +42,26 @@ public class AppTest {
 
     @Test
     public void randomQuote() {
-        assertTrue(randomQuote.length()>1);
+        assertTrue(randomQuote.text.length()>1);
     }
+    @Test
+    public void testAPI() {
+        Quote quote = app.getQuoteFromApi();
+        assertTrue(quote.text.length()>0);
+    }
+    @Test
+    public void testAPI_VerifyAuthor() {
+        //Must have internet
+        Quote quote = app.getQuoteFromApi();
+        assertTrue(quote.author.equals("Ron Swanson"));
+    }
+    @Test
+    public void testCacheNewQuote() throws IOException {
+        //Must Have Internet Connection
+        app.getQuoteFromApi();
+        List<Quote> newQuotes = app.readFile();
+
+        assertTrue(quotes.size()<newQuotes.size());
+    }
+
 }

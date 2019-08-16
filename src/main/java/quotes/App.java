@@ -5,8 +5,15 @@ package quotes;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
+import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,7 +22,59 @@ import java.util.Random;
 
 public class App {
 
-    public List<Quote> readFile() throws IOException {
+    public static Quote getQuoteFromApi(){
+        Gson gson = new Gson();
+        Quote output;
+        try {
+            URL apiURL = new URL("https://ron-swanson-quotes.herokuapp.com/v2/quotes");
+            HttpURLConnection connection = (HttpURLConnection) apiURL.openConnection();
+            connection.setRequestMethod("GET");
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            content = content.deleteCharAt(0);
+            content = content.deleteCharAt(content.length()-1);
+            String formattedQuote = content.toString();
+            Quote newQuote = new Quote(formattedQuote);
+
+            writeToFile(newQuote);
+            output = newQuote;
+        } catch (IOException e) {
+//            read file into data structure
+            List<Quote> quotes = null;
+            try {
+                quotes = readFile();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            //call a random quote
+            Quote randomQuote = randomQuote(quotes);
+            output = randomQuote;
+            e.printStackTrace();
+        }
+        return output;
+
+    }
+    public static void writeToFile(Quote newQuote){
+        try {
+            Gson gson = new Gson();
+            List<Quote> quotesList = readFile();
+            quotesList.add(newQuote);
+            FileWriter file = new FileWriter("src/main/resources/recentquotes.json");
+            gson.toJson(quotesList,file);
+            file.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static List<Quote> readFile() throws IOException {
         //start gson
         Gson gson = new Gson();
         //path
@@ -25,37 +84,30 @@ public class App {
         String text = new String (Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
 
         //creates an artifact for gson casting
-        TypeToken<List<Quote>> token = new TypeToken<>() {
-        };
+        TypeToken<List<Quote>> token = new TypeToken<>() {};
         //creates from text, list object
         List<Quote> quotes = gson.fromJson(text, token.getType());
 
         return quotes;
     }
 
-    public String randomQuote (List<Quote> quotes){
+    public static Quote randomQuote (List<Quote> quotes){
         //variables
         int max = quotes.size();
         int min = 0;
         //random choice between max and min
         Random r = new Random();
         int choice = r.nextInt((max-min)+1)+min;
-        String output = quotes.get(choice).toString();
+        Quote output = quotes.get(choice);
         //return
         return output;
     }
 
     public static void main(String[] args) throws IOException {
-        //create instance
+//        //create instance
         App app = new App();
-        
-        //read file into data structure
-        List<Quote> quotes = app.readFile();
 
-        //call a random quote
-        String randomQuote = app.randomQuote(quotes);
-
-        //print
-        System.out.println(randomQuote);
+        System.out.println(getQuoteFromApi());
+//
     }
 }
